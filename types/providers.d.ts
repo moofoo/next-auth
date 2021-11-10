@@ -1,5 +1,5 @@
 import { Profile, TokenSet, User } from "."
-import { Awaitable, NextApiRequest } from "./internals/utils"
+import { Awaitable, NextApiRequest, NextApiResponse} from "./internals/utils"
 import { Options as SMTPConnectionOptions } from 'nodemailer/lib/smtp-connection'
 
 export type ProviderType = "oauth" | "email" | "credentials"
@@ -121,7 +121,7 @@ interface CredentialsConfig<C extends Record<string, CredentialInput> = {}>
   extends CommonProviderOptions {
   type: "credentials"
   credentials: C
-  authorize(credentials: Record<keyof C, string>, req: NextApiRequest): Awaitable<User | null>
+  authorize(req: NextApiRequest, res: NextApiResponse, credentials: Record<keyof C, string>): Awaitable<User | null>
 }
 
 export type CredentialsProvider = <C extends Record<string, CredentialInput>>(
