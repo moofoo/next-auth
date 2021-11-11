@@ -16,31 +16,6 @@ yarn.lock
 # Dependencies
 node_modules
 
-# Build dirs
-.next
-/build
-/dist
-/www/build
-
-# Generated files
-.docusaurus
-.cache-loader
-www/providers.json
-src/providers/index.js
-/internals
-/adapters.d.ts
-/adapters.js
-/client.d.ts
-/client.js
-/index.d.ts
-/index.js
-/jwt.d.ts
-/jwt.js
-/providers.d.ts
-/providers.js
-/errors.js
-/errors.d.ts
-
 # Development app
 app/next-auth
 app/dist/css
