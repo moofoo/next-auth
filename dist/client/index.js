@@ -488,7 +488,7 @@ function _signIn() {
             error = new URL(data.url).searchParams.get("error");
 
             if (error.includes("|--JSON--|")) {
-              error = JSON.parse(error);
+              error = JSON.parse(error.replace("|--JSON--|", ""));
             }
 
             if (!res.ok) {
