@@ -285,11 +285,22 @@ async function callback(req, res) {
       return res.redirect(error);
     }
 
-    const user = userObjectReturnedFromAuthorizeHandler;
-    const account = {
+    let user = userObjectReturnedFromAuthorizeHandler;
+    let account = {
       id: provider.id,
       type: "credentials"
     };
+
+    if (user.account) {
+      const {
+        account: userAccount,
+        ...rest
+      } = user;
+      account = { ...account,
+        ...userAccount
+      };
+      user = rest;
+    }
 
     try {
       const signInCallbackResponse = await callbacks.signIn(user, account, credentials);

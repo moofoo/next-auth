@@ -146,8 +146,7 @@ export default async function callback(req, res) {
         // Note that the callback URL is preserved, so the journey can still be resumed
         if (isNewUser && pages.newUser) {
           return res.redirect(
-            `${pages.newUser}${
-              pages.newUser.includes("?") ? "&" : "?"
+            `${pages.newUser}${pages.newUser.includes("?") ? "&" : "?"
             }callbackUrl=${encodeURIComponent(callbackUrl)}`
           )
         }
@@ -293,8 +292,7 @@ export default async function callback(req, res) {
       // Note that the callback URL is preserved, so the journey can still be resumed
       if (isNewUser && pages.newUser) {
         return res.redirect(
-          `${pages.newUser}${
-            pages.newUser.includes("?") ? "&" : "?"
+          `${pages.newUser}${pages.newUser.includes("?") ? "&" : "?"
           }callbackUrl=${encodeURIComponent(callbackUrl)}`
         )
       }
@@ -336,7 +334,7 @@ export default async function callback(req, res) {
     let userObjectReturnedFromAuthorizeHandler
     try {
       userObjectReturnedFromAuthorizeHandler = await provider.authorize(req, res, credentials);
-      
+
       if (!userObjectReturnedFromAuthorizeHandler) {
         return res
           .status(401)
@@ -357,8 +355,22 @@ export default async function callback(req, res) {
       return res.redirect(error)
     }
 
-    const user = userObjectReturnedFromAuthorizeHandler
-    const account = { id: provider.id, type: "credentials" }
+    let user = userObjectReturnedFromAuthorizeHandler
+    let account = { id: provider.id, type: "credentials" }
+
+    if (user.account) {
+
+      const { account: userAccount, ...rest } = user;
+
+      account = {
+        ...account,
+        ...userAccount
+      }
+
+      user = rest;
+    }
+
+
 
     try {
       const signInCallbackResponse = await callbacks.signIn(
