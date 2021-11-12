@@ -423,6 +423,7 @@ function _signIn() {
 
           case 46:
             return _context7.abrupt("return", {
+              data: data,
               error: error,
               status: res.status,
               ok: res.ok,
