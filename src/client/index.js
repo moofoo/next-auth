@@ -199,19 +199,28 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
     : `${baseUrl}/signin/${provider}`
 
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
+  let res;
+  let errorObj;
+  try {
+    res = await fetch(_signInUrl, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        ...options,
+        csrfToken: await getCsrfToken(),
+        callbackUrl,
+        json: true,
+      }),
+    })
+  } catch (err) {
+    try {
+      errorObj = await err.json();
+      //Here is already the payload from API
 
-  const res = await fetch(_signInUrl, {
-    method: "post",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({
-      ...options,
-      csrfToken: await getCsrfToken(),
-      callbackUrl,
-      json: true,
-    }),
-  })
+    } catch (e) { }
+  }
 
   const data = await res.json()
 
@@ -230,7 +239,7 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
   }
 
   return {
-    data,
+    data: data || errorObj,
     error,
     status: res.status,
     ok: res.ok,
