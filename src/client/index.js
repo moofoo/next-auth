@@ -218,9 +218,9 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
 
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
 
-  let errawr;
+
   let errObj;
-  let errorBody;
+
 
   const res = await fetch(_signInUrl, {
     method: "post",
@@ -237,20 +237,6 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
 
 
 
-  try {
-    checkStatus(res);
-  } catch (err) {
-    errawr = err;
-
-    errorBody = await err.response.text();
-    try {
-      errObj = await err.response.json();
-    } catch (err) {
-      //
-    }
-
-  }
-
   console.log(res);
 
   const data = await res.json()
@@ -263,10 +249,14 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
     return
   }
 
-  let error = new URL(data.url).searchParams.get("error")
+  const error = new URL(data.url).searchParams.get("error")
 
   if (error.includes("|--JSON--|")) {
-    error = JSON.parse(error.replace("|--JSON--|", ""));
+    try {
+      errObj = JSON.parse(error.replace("|--JSON--|", ""));
+    } catch (err) {
+      //
+    }
   }
 
   if (res.ok) {
@@ -274,9 +264,7 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
   }
 
   return {
-    errawr,
     errObj,
-    errorBody,
     data,
     error,
     status: res.status,
