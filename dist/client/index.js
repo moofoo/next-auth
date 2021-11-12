@@ -319,7 +319,8 @@ function _signIn() {
         signInUrl,
         _signInUrl,
         res,
-        errorObj,
+        errawr,
+        errObj,
         data,
         _data$url,
         url,
@@ -394,34 +395,35 @@ function _signIn() {
 
           case 34:
             res = _context7.sent;
-            _context7.next = 47;
+            _context7.next = 48;
             break;
 
           case 37:
             _context7.prev = 37;
             _context7.t13 = _context7["catch"](16);
-            _context7.prev = 39;
-            _context7.next = 42;
+            errawr = _context7.t13;
+            _context7.prev = 40;
+            _context7.next = 43;
             return _context7.t13.json();
 
-          case 42:
-            errorObj = _context7.sent;
-            _context7.next = 47;
+          case 43:
+            errObj = _context7.sent;
+            _context7.next = 48;
             break;
 
-          case 45:
-            _context7.prev = 45;
-            _context7.t14 = _context7["catch"](39);
+          case 46:
+            _context7.prev = 46;
+            _context7.t14 = _context7["catch"](40);
 
-          case 47:
-            _context7.next = 49;
+          case 48:
+            _context7.next = 50;
             return res.json();
 
-          case 49:
+          case 50:
             data = _context7.sent;
 
             if (!(redirect || !isSupportingReturn)) {
-              _context7.next = 55;
+              _context7.next = 56;
               break;
             }
 
@@ -430,34 +432,37 @@ function _signIn() {
             if (url.includes("#")) window.location.reload();
             return _context7.abrupt("return");
 
-          case 55:
+          case 56:
             error = new URL(data.url).searchParams.get("error");
 
             if (!res.ok) {
-              _context7.next = 59;
+              _context7.next = 60;
               break;
             }
 
-            _context7.next = 59;
+            _context7.next = 60;
             return __NEXTAUTH._getSession({
               event: "storage"
             });
 
-          case 59:
+          case 60:
             return _context7.abrupt("return", {
-              data: data || errorObj,
+              res: res,
+              errawr: errawr,
+              errObj: errObj,
+              data: data,
               error: error,
               status: res.status,
               ok: res.ok,
               url: error ? null : data.url
             });
 
-          case 60:
+          case 61:
           case "end":
             return _context7.stop();
         }
       }
-    }, _callee7, null, [[16, 37], [39, 45]]);
+    }, _callee7, null, [[16, 37], [40, 46]]);
   }));
   return _signIn.apply(this, arguments);
 }

@@ -18,6 +18,24 @@ import {
 import _logger, { proxyLogger } from "../lib/logger"
 import parseUrl from "../lib/parse-url"
 
+class HTTPResponseError extends Error {
+  constructor(response, ...args) {
+    super(`HTTP Error Response: ${response.status} ${response.statusText}`, ...args);
+    this.response = response;
+  }
+}
+
+const checkStatus = response => {
+  if (response.ok) {
+    // response.status >= 200 && response.status < 300
+    return response;
+  } else {
+    throw new HTTPResponseError(response);
+  }
+}
+
+
+
 // This behaviour mirrors the default behaviour for getting the site name that
 // happens server side in server/index.js
 // 1. An empty value is legitimate when the code is being invoked client side as
@@ -199,26 +217,38 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
     : `${baseUrl}/signin/${provider}`
 
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
-  let res;
-  let errorObj;
+
+  let errawr;
+  let errObj;
+  let errorBody;
+
+  const res = await fetch(_signInUrl, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      ...options,
+      csrfToken: await getCsrfToken(),
+      callbackUrl,
+      json: true,
+    }),
+  })
+
+
+
   try {
-    res = await fetch(_signInUrl, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        ...options,
-        csrfToken: await getCsrfToken(),
-        callbackUrl,
-        json: true,
-      }),
-    })
+    checkStatus(res);
   } catch (err) {
+    errawr = err;
+
+    errorBody = await error.response.text();
     try {
-      errorObj = await err.json();
-    } catch (e) { }
-  }
+      errObj = await error.response.json();
+    }
+
+}
+
 
   const data = await res.json()
 
@@ -237,7 +267,10 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
   }
 
   return {
-    data: data || errorObj,
+    errawr,
+    errObj,
+    errorBody,
+    data,
     error,
     status: res.status,
     ok: res.ok,
