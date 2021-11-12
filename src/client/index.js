@@ -30,8 +30,8 @@ const __NEXTAUTH = {
   basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
   baseUrlServer: parseUrl(
     process.env.NEXTAUTH_URL_INTERNAL ||
-      process.env.NEXTAUTH_URL ||
-      process.env.VERCEL_URL
+    process.env.NEXTAUTH_URL ||
+    process.env.VERCEL_URL
   ).baseUrl,
   basePathServer: parseUrl(
     process.env.NEXTAUTH_URL_INTERNAL || process.env.NEXTAUTH_URL
@@ -43,7 +43,7 @@ const __NEXTAUTH = {
   _clientSyncTimer: null,
   _eventListenersAdded: false,
   _clientSession: undefined,
-  _getSession: () => {},
+  _getSession: () => { },
 }
 
 const logger = proxyLogger(_logger, __NEXTAUTH.basePath)
@@ -230,6 +230,7 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
   }
 
   return {
+    data,
     error,
     status: res.status,
     ok: res.ok,

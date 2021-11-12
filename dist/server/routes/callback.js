@@ -109,7 +109,8 @@ async function callback(req, res) {
             sub: (_user$id = user.id) === null || _user$id === void 0 ? void 0 : _user$id.toString()
           };
           const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, OAuthProfile, isNewUser);
-          const newEncodedJwt = await jwt.encode({ ...jwt,
+          const newEncodedJwt = await jwt.encode({
+            ...jwt,
             token: jwtPayload
           });
           const cookieExpires = new Date();
@@ -220,7 +221,8 @@ async function callback(req, res) {
           sub: (_user$id2 = user.id) === null || _user$id2 === void 0 ? void 0 : _user$id2.toString()
         };
         const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, profile, isNewUser);
-        const newEncodedJwt = await jwt.encode({ ...jwt,
+        const newEncodedJwt = await jwt.encode({
+          ...jwt,
           token: jwtPayload
         });
         const cookieExpires = new Date();
@@ -312,7 +314,8 @@ async function callback(req, res) {
       sub: (_user$id3 = user.id) === null || _user$id3 === void 0 ? void 0 : _user$id3.toString()
     };
     const jwtPayload = await callbacks.jwt(defaultJwtPayload, user, account, userObjectReturnedFromAuthorizeHandler, false);
-    const newEncodedJwt = await jwt.encode({ ...jwt,
+    const newEncodedJwt = await jwt.encode({
+      ...jwt,
       token: jwtPayload
     });
     const cookieExpires = new Date();
