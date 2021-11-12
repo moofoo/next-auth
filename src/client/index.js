@@ -242,12 +242,14 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
   } catch (err) {
     errawr = err;
 
-    errorBody = await error.response.text();
+    errorBody = await err.response.text();
     try {
-      errObj = await error.response.json();
+      errObj = await err.response.json();
+    } catch (err) {
+      //
     }
 
-}
+  }
 
 
   const data = await res.json()

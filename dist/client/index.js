@@ -25,6 +25,16 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _wrapNativeSuper2 = _interopRequireDefault(require("@babel/runtime/helpers/wrapNativeSuper"));
+
 var _react = require("react");
 
 var _logger2 = _interopRequireWildcard(require("../lib/logger"));
@@ -38,6 +48,40 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2.default)(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2.default)(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2.default)(this, result); }; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+var HTTPResponseError = function (_Error) {
+  (0, _inherits2.default)(HTTPResponseError, _Error);
+
+  var _super = _createSuper(HTTPResponseError);
+
+  function HTTPResponseError(response) {
+    var _this;
+
+    (0, _classCallCheck2.default)(this, HTTPResponseError);
+
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    _this = _super.call.apply(_super, [this, "HTTP Error Response: ".concat(response.status, " ").concat(response.statusText)].concat(args));
+    _this.response = response;
+    return _this;
+  }
+
+  return HTTPResponseError;
+}((0, _wrapNativeSuper2.default)(Error));
+
+var checkStatus = function checkStatus(response) {
+  if (response.ok) {
+    return response;
+  } else {
+    throw new HTTPResponseError(response);
+  }
+};
 
 var __NEXTAUTH = {
   baseUrl: (0, _parseUrl.default)(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
@@ -318,9 +362,10 @@ function _signIn() {
         isSupportingReturn,
         signInUrl,
         _signInUrl,
-        res,
         errawr,
         errObj,
+        errorBody,
+        res,
         data,
         _data$url,
         url,
@@ -362,7 +407,6 @@ function _signIn() {
             isSupportingReturn = isCredentials || isEmail;
             signInUrl = isCredentials ? "".concat(baseUrl, "/callback/").concat(provider) : "".concat(baseUrl, "/signin/").concat(provider);
             _signInUrl = "".concat(signInUrl, "?").concat(new URLSearchParams(authorizationParams));
-            _context7.prev = 16;
             _context7.t0 = fetch;
             _context7.t1 = _signInUrl;
             _context7.t2 = {
@@ -372,10 +416,10 @@ function _signIn() {
             _context7.t4 = _objectSpread;
             _context7.t5 = _objectSpread({}, options);
             _context7.t6 = {};
-            _context7.next = 26;
+            _context7.next = 25;
             return getCsrfToken();
 
-          case 26:
+          case 25:
             _context7.t7 = _context7.sent;
             _context7.t8 = callbackUrl;
             _context7.t9 = {
@@ -390,40 +434,47 @@ function _signIn() {
               headers: _context7.t2,
               body: _context7.t11
             };
-            _context7.next = 34;
+            _context7.next = 33;
             return (0, _context7.t0)(_context7.t1, _context7.t12);
 
-          case 34:
+          case 33:
             res = _context7.sent;
-            _context7.next = 48;
+            _context7.prev = 34;
+            checkStatus(res);
+            _context7.next = 52;
             break;
 
-          case 37:
-            _context7.prev = 37;
-            _context7.t13 = _context7["catch"](16);
+          case 38:
+            _context7.prev = 38;
+            _context7.t13 = _context7["catch"](34);
             errawr = _context7.t13;
-            _context7.prev = 40;
             _context7.next = 43;
-            return _context7.t13.json();
+            return _context7.t13.response.text();
 
           case 43:
+            errorBody = _context7.sent;
+            _context7.prev = 44;
+            _context7.next = 47;
+            return _context7.t13.response.json();
+
+          case 47:
             errObj = _context7.sent;
-            _context7.next = 48;
+            _context7.next = 52;
             break;
 
-          case 46:
-            _context7.prev = 46;
-            _context7.t14 = _context7["catch"](40);
+          case 50:
+            _context7.prev = 50;
+            _context7.t14 = _context7["catch"](44);
 
-          case 48:
-            _context7.next = 50;
+          case 52:
+            _context7.next = 54;
             return res.json();
 
-          case 50:
+          case 54:
             data = _context7.sent;
 
             if (!(redirect || !isSupportingReturn)) {
-              _context7.next = 56;
+              _context7.next = 60;
               break;
             }
 
@@ -432,24 +483,24 @@ function _signIn() {
             if (url.includes("#")) window.location.reload();
             return _context7.abrupt("return");
 
-          case 56:
+          case 60:
             error = new URL(data.url).searchParams.get("error");
 
             if (!res.ok) {
-              _context7.next = 60;
+              _context7.next = 64;
               break;
             }
 
-            _context7.next = 60;
+            _context7.next = 64;
             return __NEXTAUTH._getSession({
               event: "storage"
             });
 
-          case 60:
+          case 64:
             return _context7.abrupt("return", {
-              res: res,
               errawr: errawr,
               errObj: errObj,
+              errorBody: errorBody,
               data: data,
               error: error,
               status: res.status,
@@ -457,12 +508,12 @@ function _signIn() {
               url: error ? null : data.url
             });
 
-          case 61:
+          case 65:
           case "end":
             return _context7.stop();
         }
       }
-    }, _callee7, null, [[16, 37], [40, 46]]);
+    }, _callee7, null, [[34, 38], [44, 50]]);
   }));
   return _signIn.apply(this, arguments);
 }
