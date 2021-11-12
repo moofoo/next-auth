@@ -251,6 +251,7 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
 
   }
 
+  console.log(res);
 
   const data = await res.json()
 
@@ -262,7 +263,11 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
     return
   }
 
-  const error = new URL(data.url).searchParams.get("error")
+  let error = new URL(data.url).searchParams.get("error")
+
+  if (error.includes("|--JSON--|")) {
+    error = JSON.parse(error);
+  }
 
   if (res.ok) {
     await __NEXTAUTH._getSession({ event: "storage" })

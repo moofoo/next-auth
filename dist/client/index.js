@@ -467,14 +467,15 @@ function _signIn() {
             _context7.t14 = _context7["catch"](44);
 
           case 52:
-            _context7.next = 54;
+            console.log(res);
+            _context7.next = 55;
             return res.json();
 
-          case 54:
+          case 55:
             data = _context7.sent;
 
             if (!(redirect || !isSupportingReturn)) {
-              _context7.next = 60;
+              _context7.next = 61;
               break;
             }
 
@@ -483,20 +484,24 @@ function _signIn() {
             if (url.includes("#")) window.location.reload();
             return _context7.abrupt("return");
 
-          case 60:
+          case 61:
             error = new URL(data.url).searchParams.get("error");
 
+            if (error.includes("|--JSON--|")) {
+              error = JSON.parse(error);
+            }
+
             if (!res.ok) {
-              _context7.next = 64;
+              _context7.next = 66;
               break;
             }
 
-            _context7.next = 64;
+            _context7.next = 66;
             return __NEXTAUTH._getSession({
               event: "storage"
             });
 
-          case 64:
+          case 66:
             return _context7.abrupt("return", {
               errawr: errawr,
               errObj: errObj,
@@ -508,7 +513,7 @@ function _signIn() {
               url: error ? null : data.url
             });
 
-          case 65:
+          case 67:
           case "end":
             return _context7.stop();
         }
