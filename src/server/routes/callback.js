@@ -356,7 +356,14 @@ export default async function callback(req, res) {
     }
 
     let user = userObjectReturnedFromAuthorizeHandler
+
     let account = { id: provider.id, type: "credentials" }
+
+    if (Array.isArray(user)) {
+      const userAccount = user[1];
+      user = user[0];
+      account = { ...account, ...userAccount };
+    }
 
     if (user.account) {
 
