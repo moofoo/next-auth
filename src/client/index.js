@@ -217,8 +217,6 @@ export async function signIn(provider, options = {}, authorizationParams = {}) {
   } catch (err) {
     try {
       errorObj = await err.json();
-      //Here is already the payload from API
-
     } catch (e) { }
   }
 
